@@ -1,0 +1,87 @@
+{
+  "esvaziar_lixeira": {
+    "nome": "Esvaziar Lixeira",
+    "descricao": "Limpa todos os arquivos previamente deletados em todas as unidades de disco locais. Ideal para recuperar espaço superficial.",
+    "comando": "Clear-RecycleBin -Force -ErrorAction SilentlyContinue; exit 0"
+  },
+  "limpar_temp_usuario": {
+    "nome": "Limpeza Temp do Usuário",
+    "descricao": "Remove arquivos temporários gerados pelas aplicações executadas com o perfil do usuário atual.",
+    "comando": "Remove-Item -Path \"$env:TEMP\\*\" -Recurse -Force -ErrorAction SilentlyContinue; exit 0"
+  },
+  "limpar_cache_navegadores": {
+    "nome": "Limpeza de Cache (Chrome/Edge)",
+    "descricao": "Exclui milhares de arquivos de cache de sites dos diretórios padrão do Chrome e do Edge.",
+    "comando": "$chrome = \"$env:LOCALAPPDATA\\Google\\Chrome\\User Data\\Default\\Cache\\*\"; $edge = \"$env:LOCALAPPDATA\\Microsoft\\Edge\\User Data\\Default\\Cache\\*\"; Remove-Item -Path $chrome -Recurse -Force -ErrorAction SilentlyContinue; Remove-Item -Path $edge -Recurse -Force -ErrorAction SilentlyContinue; exit 0"
+  },
+  "verificacao_disco_leitura": {
+    "nome": "Verificação de Disco (CHKDSK Scan)",
+    "descricao": "Executa uma varredura online no disco C: em busca de setores defeituosos ou corrupção, sem desmontar o volume ou exigir reinício.",
+    "comando": "chkdsk C: /scan; exit 0"
+  },
+  "listar_drivers_instalados": {
+    "nome": "Lista de Drivers do Sistema",
+    "descricao": "Coleta a lista detalhada de todos os drivers instalados na máquina, útil para diagnosticar problemas de hardware ou tela azul.",
+    "comando": "driverquery /v /fo csv; exit 0"
+  },
+  "diagnostico_rede_avancado": {
+    "nome": "Diagnóstico de IPs e Rotas",
+    "descricao": "Coleta as configurações atuais de IP, DNS e a tabela de roteamento do Windows.",
+    "comando": "ipconfig /all; echo ----; netstat -r; exit 0"
+  },
+  "status_firewall": {
+    "nome": "Auditoria do Windows Firewall",
+    "descricao": "Verifica o estado (Ativado/Desativado) de todos os perfis do firewall (Domínio, Privado e Público).",
+    "comando": "netsh advfirewall show allprofiles; exit 0"
+  },
+  "reparo_rede_basico": {
+    "nome": "Reset de Rede e DNS",
+    "descricao": "Limpa o cache de DNS e reseta o catálogo Winsock. Resolve problemas comuns de lentidão ou falta de conectividade com a internet.",
+    "comando": "ipconfig /flushdns; netsh winsock reset; exit 0"
+  },
+  "verificacao_sfc": {
+    "nome": "System File Checker (SFC)",
+    "descricao": "Verifica a integridade dos arquivos protegidos do sistema e tenta reparar arquivos corrompidos substituindo-os por uma cópia em cache.",
+    "comando": "sfc /scannow; exit 0"
+  },
+  "otimizacao_ssd": {
+    "nome": "Otimização de Disco (TRIM)",
+    "descricao": "Executa o comando de retrim (otimização) na unidade C: para melhorar a performance de leitura/escrita em SSDs.",
+    "comando": "Optimize-Volume -DriveLetter C -ReTrim -Verbose -ErrorAction SilentlyContinue; exit 0"
+  },
+  "coleta_sysinfo": {
+    "nome": "Coleta de Informações do Sistema",
+    "descricao": "Gera um relatório rápido com a versão do sistema operacional, tempo de atividade (uptime) e fabricante, útil para anexar em chamados.",
+    "comando": "systeminfo | findstr /B /C:\"OS Name\" /C:\"OS Version\" /C:\"System Boot Time\" /C:\"System Manufacturer\"; exit 0"
+  },
+  "limpar_arquivos_recentes": {
+    "nome": "Limpeza de Arquivos Recentes",
+    "descricao": "Remove os atalhos invisíveis que o Windows Explorer gera para alimentar a aba de Acesso Rápido. Não deleta os arquivos originais.",
+    "comando": "Remove-Item -Path \"$env:APPDATA\\Microsoft\\Windows\\Recent\\*\" -Recurse -Force -ErrorAction SilentlyContinue; exit 0"
+  },
+  "limpar_windows_update": {
+    "nome": "Limpeza do Windows Update",
+    "descricao": "Interrompe os serviços de rede, esvazia os patches antigos baixados pelo Windows na pasta SoftwareDistribution e reativa os serviços.",
+    "comando": "Stop-Service -Name wuauserv -Force -ErrorAction SilentlyContinue; Stop-Service -Name bits -Force -ErrorAction SilentlyContinue; Remove-Item -Path \"$env:windir\\SoftwareDistribution\\Download\\*\" -Recurse -Force -ErrorAction SilentlyContinue; Start-Service -Name wuauserv -ErrorAction SilentlyContinue; Start-Service -Name bits -ErrorAction SilentlyContinue; exit 0"
+  },
+  "limpeza_profunda_dism": {
+    "nome": "Limpeza de Componentes do Sistema (DISM)",
+    "descricao": "Aciona a ferramenta nativa DISM para analisar e remover versões obsoletas de componentes vitais do Windows.",
+    "comando": "DISM.exe /Online /Cleanup-Image /StartComponentCleanup; exit 0"
+  },
+  "limpar_temp_sistema_prefetch": {
+    "nome": "Limpeza Temp do Sistema e Prefetch",
+    "descricao": "Higieniza a pasta raiz do Windows Temp e a pasta Prefetch, removendo resíduos globais do sistema operacional.",
+    "comando": "$sys_temp = \"$env:windir\\Temp\\*\"; $prefetch = \"$env:windir\\Prefetch\\*\"; Remove-Item -Path $sys_temp -Recurse -Force -ErrorAction SilentlyContinue; Remove-Item -Path $prefetch -Recurse -Force -ErrorAction SilentlyContinue; exit 0"
+  },
+  "limpar_logs_eventos": {
+    "nome": "Limpeza de Logs de Eventos (Event Viewer)",
+    "descricao": "Varre e esvazia todos os registros históricos (erros, avisos, logs de segurança) acumulados pelo Visualizador de Eventos do sistema.",
+    "comando": "wevtutil el | Foreach-Object {wevtutil cl \"$_\" -ErrorAction SilentlyContinue}; exit 0"
+  },
+  "listar_tarefas_agendadas": {
+    "nome": "Auditoria de Tarefas Agendadas",
+    "descricao": "Exporta a lista de todas as tarefas agendadas no sistema no formato CSV, útil para investigar processos que iniciam sozinhos ou malwares.",
+    "comando": "schtasks /query /fo csv; exit 0"
+  }
+}
