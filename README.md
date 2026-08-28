@@ -22,6 +22,7 @@ correspondente, retornando métricas de sucesso, tempo e espaço liberado.
 ├── scripts/
 │   └── comandos.json        # Catálogo de ações/scripts disponíveis
 ├── src/projeto_agente/      # Pacote do projeto (entry point projeto-agente)
+├── tests/                   # Testes automatizados (pytest)
 └── Scripts_Limpeza (1).ipynb  # Protótipos/notebook de exploração
 ```
 
@@ -74,7 +75,31 @@ uv run uvicorn main:app --reload
 
 A pasta `logs/` não é versionada (está no `.gitignore`).
 
+## Autenticação do webhook
+
+O endpoint `/webhook/zabbix` executa comandos no sistema, então suporta um
+token compartilhado opcional via variável de ambiente `WEBHOOK_TOKEN`. Se
+definida, toda requisição precisa enviar o header `X-Webhook-Token` com o
+mesmo valor (senão recebe `401`). Se não for definida, o endpoint fica aberto
+e um aviso é logado — não deixe assim em produção.
+
+```powershell
+$env:WEBHOOK_TOKEN = "um-segredo-forte"
+uv run uvicorn main:app --reload
+```
+
+## Testes e lint
+
+```powershell
+uv run pytest
+uv run ruff check .
+```
+
+A CI (`.github/workflows/ci.yml`) roda os dois a cada push/PR.
+
 ## Roadmap e notas técnicas
 
 O plano de implementação por fases e as anotações de pesquisa (Zabbix,
 captura de tela em Sessão 0, LangChain/Ollama, etc.) estão em [andamento.md](andamento.md).
+O checklist de melhorias e pendências (o que já foi feito e o que falta) está
+em [CHECKLIST.md](CHECKLIST.md).
